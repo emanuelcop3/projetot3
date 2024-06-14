@@ -9,28 +9,56 @@ on:
       - develop
 
 jobs:
-  checkout-code:
+  build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-  install-dependencies:
-    needs: checkout-code
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
       - name: Install dependencies
-        run: npm new
+        run: npm install
 
-  run-tests:
-    needs: checkout-code
+      - name: Build
+        run: npm run build
+
+  dependabot:
+    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Setup Dependabot
+        uses: dependabot/fetch-metadata@v1.1.0
+        with:
+          github-token: "${{ secrets.GITHUB_TOKEN }}"
+
+  check-packages:
+    needs: dependabot
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Check packages
+        run: npm audit
+
+  run-tests:
+    needs: check-packages
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
 
       - name: Install dependencies
         run: npm install
@@ -45,6 +73,11 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
       - name: Install dependencies
         run: npm install
 
@@ -55,4 +88,11 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: test-results
-          path: incorrect-path/test-results
+          path: ./test-results
+
+  confirmation:
+    needs: upload-test-results
+    runs-on: ubuntu-latest
+    steps:
+      - name: All steps completed successfully
+        run: echo "All steps completed successfully!"

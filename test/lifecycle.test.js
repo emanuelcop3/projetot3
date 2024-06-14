@@ -1,8 +1,7 @@
-var sails = require('sails');
+var sails = require("sails");
 
 // Before running any tests...
-before(function(done) {
-
+before(function (done) {
   // Increase the Mocha timeout so that Sails has enough time to lift, even if you have a bunch of assets.
   this.timeout(5000);
 
@@ -12,7 +11,7 @@ before(function(done) {
 
     // For example, we might want to skip the Grunt hook,
     // and disable all logs except errors and warnings:
-    hooks: { grunt: false },
+    hooks: { grunt: false, csrf: false },
     log: { level: 'warn' },
 
   }, function(err) {
@@ -25,12 +24,11 @@ before(function(done) {
   });
 });
 
-// After all tests have finished...
-after(function(done) {
+after(function (done) {
+  // After all tests have finished...
 
   // here you can clear fixtures, etc.
   // (e.g. you might want to destroy the records you created above)
 
   sails.lower(done);
-
 });

@@ -29,11 +29,12 @@ module.exports.datastores = {
    * (For production configuration, see `config/env/production.js`.)          *
    *                                                                          *
    ***************************************************************************/
-
     default: {
       adapter: "sails-postgresql",
       url: "postgresql://my_user:my_password@localhost:5432/petbook",
     },
+
+  },
     /***************************************************************************
      *                                                                          *
      * Want to use a different database during development?                     *
@@ -49,5 +50,3 @@ module.exports.datastores = {
      *                                                                          *
      ***************************************************************************/
 
-  },
-};
