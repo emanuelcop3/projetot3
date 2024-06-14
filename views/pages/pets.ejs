@@ -9,6 +9,7 @@
     })
       .then(async (result) => {
         const response = await result.json();
+         console.log(response);
         const listContainer = document.getElementById("listContainer");
         listContainer.innerHTML = "";
         response.forEach((pet) => {
@@ -18,7 +19,7 @@
         });
       })
       .catch((err) => {
-        sails.log(err.message)
+        console.log(err);
       });
   };
   getPets();
